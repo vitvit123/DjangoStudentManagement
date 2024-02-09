@@ -1,4 +1,5 @@
 {% load socialaccount %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,10 +54,35 @@
         .navbar {
             background-color: #f8f9fa;
         }
-        
+        .container-fluid{
+            display: flex !important;
+        justify-content: flex-end !important;
+        }
+        .container-fluid .pfp{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
         h1 {
             margin-top: 0;
         }
+        .logo {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+        .logo img.logos,
+        .logo h2, .logo i {
+            margin: 0; /* Reset margin */
+        }
+
+        .logo .logos{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
     </style>
   
 </head>
@@ -65,29 +91,43 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="logo">
-            <h3>Admin Dashboard</h3>
+            <img class="logos" src="{% static 'img/Screenshot_2024-02-09_144647-removebg-preview.png' %}" alt="">
+            <h2>{{user.username}}</h2>
+            <i style="color: #3AD1BC;" class="fa-solid fa-circle-check"></i>
         </div>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="#">Dashboard</a>
+                <a class="nav-link active" href="/index/">Dashboard</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Users</a>
+                <a id="UserTab" class="nav-link" href="/users/">Users</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Products</a>
+                <a class="nav-link" href="">Products</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Orders</a>
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="/logout/">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% provider_login_url 'google' %}?next=/">Login with Google</a>
+            </li>
+            {% endif %}
         </ul>
     </aside>
 
-    <!-- Content -->
     <div class="content">
         <header class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a href="{% provider_login_url 'google' %}?next=/">Login with Google</a>
+                {% if user.is_authenticated %}
+                {% if user.socialaccount_set.all %}
+                    <img  src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="pfp" alt="Social Account Profile Picture">
+                {% endif %} 
+            {% endif %} 
             </div>  
         </header>
 
@@ -95,17 +135,7 @@
         <div class="container">
             <h1>Welcome to the Admin Dashboard</h1>
             <p>This is the main content area.</p>
-            {% if user.is_authenticated %}
-            {% if user.socialaccount_set.all %}
-                {{ user.socialaccount_set.all.0.uid }}
-                {{ user.socialaccount_set.all.0.User }}
-                <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="pfp" alt="Social Account Profile Picture">
-            {% endif %} 
-            <script>
-                window.location.href = "/index/";  
-            </script>
-
-    {% endif %} 
+           
         </div>
         {% endblock %}
     </div>
