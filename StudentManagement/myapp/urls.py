@@ -11,4 +11,6 @@ app_name = 'myapp'
 urlpatterns = [
     re_path('logout/',logout_view, name='logout'),
     re_path('index/',views.indexpage,name='indexpage'),
-    re_path('users/', myapp_view.users, name='users'),    ]
+    re_path('users/', myapp_view.users, name='users'),    
+    re_path('login/', views.login_view, name='login'),    
+]
