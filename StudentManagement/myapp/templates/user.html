@@ -4,8 +4,21 @@
 {% block custom_content %}
 {{ block.super }}
 <div class="container">
-    <h1>userpage</h1>
-    <button>he</button>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit assumenda molestias quibusdam! Soluta delectus voluptatibus praesentium tempore voluptas eaque! Aperiam ut distinctio cum fugit ab molestiae cumque repellat eveniet tenetur voluptas impedit sunt commodi, fuga illum tempore mollitia? Minus voluptatum reprehenderit corporis, iure eum dignissimos! Architecto ex modi inventore sed illum. Laborum eos, explicabo veritatis a inventore, velit eveniet accusamus hic sint unde, architecto beatae. Aperiam iste ut ab, cum omnis sunt corporis eveniet laboriosam facilis laborum totam alias! Modi eligendi molestiae earum beatae inventore asperiores incidunt ea id enim ad laudantium, voluptatibus cum, dicta sit atque recusandae numquam. Sit doloribus perspiciatis ipsam, nesciunt quibusdam eius voluptatibus tempora! Blanditiis, vel eos! Iure nostrum tempora, culpa sit libero nemo nesciunt praesentium.</p>
+    <h1>Login</h1>
+    <form method="post" action="{% url 'myapp:login' %}">
+        {% csrf_token %}
+        {% if error_message %}
+            <p class="text-danger">{{ error_message }}</p>
+        {% endif %}
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
 </div>
 {% endblock %}

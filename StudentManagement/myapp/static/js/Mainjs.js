@@ -34,7 +34,7 @@ $('#login-link').click(function(event) {
             $('#loginModal').modal('show');        
         }
     });
-    
 });
+
 
 
