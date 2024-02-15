@@ -4,21 +4,34 @@
 {% block custom_content %}
 {{ block.super }}
 <div class="container">
-    <h1>Login</h1>
-    <form method="post" action="{% url 'myapp:login' %}">
-        {% csrf_token %}
-        {% if error_message %}
-            <p class="text-danger">{{ error_message }}</p>
-        {% endif %}
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-</div>
+    <h2>Students in the selected classes</h2>
+    <p>Classes:</p>
+    <ul>
+      {% for class in selected_classes %}
+        <li>{{ class.ClassName }}</li>
+      {% endfor %}
+    </ul>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <!-- Add more fields as needed -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.student_id }}</td>
+          <td>{{ student.first_name }}</td>
+          <td>{{ student.last_name }}</td>
+          <td>{{ student.email }}</td>
+          <!-- Add more fields as needed -->
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

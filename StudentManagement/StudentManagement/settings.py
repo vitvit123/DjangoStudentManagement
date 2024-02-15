@@ -153,5 +153,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-LOGIN_REDIRECT_URL= "/"
-LOGOUT_REDIRECT_URL= "/"
+LOGIN_URL = 'myapp:index'
+LOGIN_REDIRECT_URL = 'myapp:users'  # Update to the desired URL after login
+LOGOUT_REDIRECT_URL = 'myapp:index'
