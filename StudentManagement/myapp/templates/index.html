@@ -159,8 +159,8 @@
                                 {% csrf_token %}
                                 
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="" id="email" name="email" class="form-control" placeholder="Email" required>
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="" id="username" name="username" class="form-control" placeholder="Username" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
@@ -171,6 +171,7 @@
                                 <p>{{ error_message }}</p>
                                 {% endif %}
                             </form>
+                            
                             
 
                         </div>

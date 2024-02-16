@@ -154,5 +154,5 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = 'myapp:index'
-LOGIN_REDIRECT_URL = 'myapp:users'  # Update to the desired URL after login
+LOGIN_REDIRECT_URL = 'myapp:users'  
 LOGOUT_REDIRECT_URL = 'myapp:index'

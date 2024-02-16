@@ -1,6 +1,5 @@
 from django.urls import include, re_path
 from django.conf import settings 
-
 from myapp import views as myapp_view
 from . import views
 from .views import logout_view

@@ -9,45 +9,37 @@ from django.contrib.auth import authenticate, login
 from .forms import *
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .forms import ClassSelectionForm
-from .models import Student, Enrollment
-from .models import Lecturer  # Import the Lecturer model at the top
+from .models import *
+from django.contrib.auth.hashers import make_password
 
 def indexpage(request):
     return render(request, 'index.html')
+
 def users(request):
     return render(request, 'user.html')
+
 def logout_view(request):
     logout(request)
-    return redirect("/")
-
+    return render(request, 'index.html')
 
 def user_login(request):
     if request.user.is_authenticated:
         return redirect('myapp:users')  
 
+    error_message = ""
     if request.method == 'POST':
-        email = request.POST.get('email')
+        username = request.POST.get('username')
         password = request.POST.get('password')
-
-        # Debugging: Print provided email and password
-        print("Provided Email:", email)
-        print("Provided Password:", password)
-
-        user = authenticate(request, email=email, password=password)
-        
-        # Debugging: Print user object
-        print("Authenticated User:", user)
-
+        # Authenticate the user
+        user = authenticate(request, username=username, password=password)
+        print(user)
+        print(username)
+        print(password)
         if user is not None:
             login(request, user)
-            # Redirect to a success page or protected view
             return redirect('myapp:users')
         else:
-            # Handle authentication failure
             error_message = "Invalid username or password. Please try again."
-    else:
-        error_message = ""
 
     return render(request, 'index.html', {'error_message': error_message})
 
