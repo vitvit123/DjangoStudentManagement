@@ -24,7 +24,7 @@ def logout_view(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('myapp:users')  
+        return redirect('myapp:user_dashboard')
 
     error_message = ""
     if request.method == 'POST':
@@ -32,29 +32,30 @@ def user_login(request):
         password = request.POST.get('password')
         # Authenticate the user
         user = authenticate(request, username=username, password=password)
-        print(user)
-        print(username)
-        print(password)
         if user is not None:
             login(request, user)
-            return redirect('myapp:users')
+            lecturer = Lecturer.objects.get(username=request.user.username)
+            # Retrieve all enrollments associated with the lecturer
+            enrollments = Enrollment.objects.filter(lecturer__username=request.user.username)
+            unique_class_names = enrollments.values_list('class_enrolled__ClassName', flat=True).distinct()
+            return render(request, 'index.html', {'lecturer': lecturer,'enrollments':enrollments, 'unique_class_names': unique_class_names})
         else:
             error_message = "Invalid username or password. Please try again."
 
     return render(request, 'index.html', {'error_message': error_message})
 
 def user_dashboard(request):
-    # Get the lecturer associated with the logged-in user
-    lecturer = Lecturer.objects.get(user=request.user)
-    return render(request, 'index.html', {'lecturer': lecturer})
-
-def teacher_class_students(request):
-    if request.method == 'POST':
-        form = ClassSelectionForm(request.POST)
-        if form.is_valid():
-            selected_classes = form.cleaned_data['classes_to_teach']
-            students = Student.objects.filter(enrollment__class_enrolled__in=selected_classes)
-            return render(request, 'teacher_class_students.html', {'form': form, 'students': students, 'selected_classes': selected_classes})
+    if request.user.is_authenticated:
+        try:
+            lecturer = Lecturer.objects.get(username=request.user.username)
+            # Retrieve all enrollments associated with the lecturer
+            enrollments = Enrollment.objects.filter(lecturer__username=request.user.username)
+            unique_class_names = enrollments.values_list('class_enrolled__ClassName', flat=True).distinct()
+            return render(request, 'user.html', {'lecturer': lecturer,'enrollments':enrollments, 'unique_class_names': unique_class_names})
+        except Lecturer.DoesNotExist:
+            # Handle the case where the lecturer does not exist for the logged-in user
+            error_message = "No lecturer information available."
+            return render(request, 'user.html', {'error_message': error_message})
     else:
-        form = ClassSelectionForm()
-    return render(request, 'teacher_class_selection.html', {'form': form})
+        # Redirect to login page if the user is not authenticated
+        return redirect('myapp:users')  # Update 'user_login' with your login URL name

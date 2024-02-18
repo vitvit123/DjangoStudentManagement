@@ -25,17 +25,20 @@ class Lecturer(models.Model):
     course = models.ForeignKey(Subject, on_delete=models.CASCADE)  # Changed to ForeignKey
     profile_picture = models.ImageField(upload_to='img/lecture_profiles/', null=True, blank=True)
     password = models.CharField(max_length=128)
-    
+
     def save(self, *args, **kwargs):
-        # Check if lecturer is being created for the first time
         if not self.pk:
-            # Create a new user with the provided username and password
+            # Creating a new User object with the provided username, email, and password
             user = User.objects.create_user(username=self.username, email=self.email, password=self.password)
-            # Hash the password before saving
             self.password = make_password(self.password)
-        
-        super().save(*args, **kwargs)
-    
+            # Saving the Lecturer instance after associating it with the created user
+            super().save(*args, **kwargs)
+            # Assigning the created user to the Lecturer instance
+            self.user = user
+        else:
+            # If the instance is already existing, szave it as usual
+            super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.id} {self.first_name} {self.last_name} {self.email} {self.phone_number} {self.course.SubjectName} {self.profile_picture} {self.password}"
 
@@ -56,12 +59,16 @@ class Student(models.Model):
     password = models.CharField(max_length=128)
     def save(self, *args, **kwargs):
         if not self.pk:
-            # Create a new user with the provided username and password
+            # Creating a new User object with the provided username, email, and password
             user = User.objects.create_user(username=self.username, email=self.email, password=self.password)
-            # Hash the password before saving
             self.password = make_password(self.password)
-        
-        super().save(*args, **kwargs)
+            # Saving the Lecturer instance after associating it with the created user
+            super().save(*args, **kwargs)
+            # Assigning the created user to the Lecturer instance
+            self.user = user
+        else:
+            # If the instance is already existing, save it as usual
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.student_id} {self.first_name} {self.last_name} {self.email} {self.phone_number} {self.date_of_birth} {self.gender} {self.address} {self.parent_guardian_name} {self.parent_guardian_phone_number} {self.course} {self.profile_picture} {self.password}"

@@ -37,4 +37,21 @@ $('#login-link').click(function(event) {
 });
 
 
+$("#selectclass").on("click", function(event) {
+    event.preventDefault();
+    var selectedValue = $("#classes_to_teach").val(); 
+    $("#selected_class_label").text("Classes: " + selectedValue);
+   
+    // Hide all table rows
+    $("table tbody tr").hide();
+    
+    // Show only the table rows with the selected class
+    $("table tbody tr").each(function() {
+        var className = $(this).find("td#class").text();
+        if (className === selectedValue) {
+            $(this).show();
+        }
+    });
+});
+
 

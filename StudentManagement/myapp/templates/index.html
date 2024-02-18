@@ -103,13 +103,13 @@
                 <a class="nav-link active" href="/index/">Dashboard <i class="fa-solid fa-house"></i></a>
             </li>
             <li class="nav-item">
-                <a id="UserTab" class="nav-link" href="/users/">Student <i class="fa-solid fa-school"></i></a>
+                <a id="UserTab" class="nav-link" href="/dashboard/">Student <i class="fa-solid fa-school"></i></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="">Attendance <i class="fa-solid fa-user-check"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">permission <i class="fa-solid fa-clipboard-user"></i></a>
+                <a class="nav-link" href="">permission <i class="fa-solid fa-clipboard-user"></i></a>
             </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
@@ -121,33 +121,34 @@
          </a>
             {% endif %}
         </ul>
-
     </aside>
-
     <div class="content">
         <header class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                {% if user.is_authenticated %}
-                    {% if user.socialaccount_set.all %}
-                        <!-- Display social account profile picture -->
-                        <img style="margin-bottom: 10px;" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="pfp" alt="Social Account Profile Picture">
-                        <h4><b>Lecture:</b>{{ user.username }}</h4>
-                        <i style="color: #3AD1BC;" class="fa-solid fa-circle-check"></i>
-                    {% else %}
-                    <h1>helo</h1>
-                        {% if user.is_lecturer %}
-                            <!-- Display lecturer's profile picture -->
-                            {% if lecturer.profile_picture %}
-                                <img src="{{ lecturer.profile_picture.url }}" alt="Profile Picture">
-                            {% else %}
-                                <p>No profile picture available.</p>
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
+                {% if request.user.is_authenticated %}
+             {% if request.user.socialaccount_set.all %}
+            <!-- Display social account profile picture -->
+            <img style="margin-bottom: 10px;" src="{{ request.user.socialaccount_set.all.0.get_avatar_url }}" class="pfp" alt="Social Account Profile Picture">
+            <h4><b>Lecture:</b> {{ request.user.username }} </h4>
+            <i style="color: #3AD1BC;" class="fa-solid fa-circle-check"></i>
+            {% else %}
+            <!-- If not using a social account, display lecturer's information -->
+            {% if lecturer %}
+                <h4><b>Lecture:</b> {{ lecturer.username }}</h4>
+                <!-- Display lecturer's profile picture -->
+                {% if lecturer.profile_picture %}
+                    <img style="margin-bottom: 10px;" src="{{ lecturer.profile_picture.url }}" class="pfp" alt="Profile Picture">
+                    <i style="color: #3AD1BC;" class="fa-solid fa-circle-check"></i>
+                {% else %}
+                    <p>No profile picture available.</p>
                 {% endif %}
-
-            
-
+            {% else %}
+                <!-- Handle the case where the user is authenticated but not associated with a lecturer -->
+                <h4><b>Lecture:</b> {{ request.user.username }}</h4>
+                <p>No lecturer information available.</p>
+            {% endif %}
+        {% endif %}
+    {% endif %}
             <div style="position: relative; display: inline-block;">
                 <i style="margin-left: 25px; font-size: 20px;" class="fa-solid fa-bell"></i>
                 <div style="position: absolute; top: -7px; right: -7px; width: 15px; height: 15px; background-color: red; border-radius: 50%; text-align: center; color: white; font-size: 10px; font-weight: bold;">1</div>
@@ -158,7 +159,6 @@
         <div class="container">
             <h1>Welcome to the Admin Dashboard</h1>
             <p>This is the main content area.</p>
-
             <!-- Login Modal -->
             <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog">
@@ -185,8 +185,6 @@
                                 <p>{{ error_message }}</p>
                                 {% endif %}
                             </form>
-                            
-                            
 
                         </div>
                     </div>
