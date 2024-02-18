@@ -128,12 +128,26 @@
         <header class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 {% if user.is_authenticated %}
-                {% if user.socialaccount_set.all %}
-                    <img style="margin-bottom: 10px;" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="pfp" alt="Social Account Profile Picture">
-                    <h4><b>Lecture:</b>{{user.username}}</h4>
-                    <i style="color: #3AD1BC;" class="fa-solid fa-circle-check"></i>
-                {% endif %} 
-            {% endif %} 
+                    {% if user.socialaccount_set.all %}
+                        <!-- Display social account profile picture -->
+                        <img style="margin-bottom: 10px;" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="pfp" alt="Social Account Profile Picture">
+                        <h4><b>Lecture:</b>{{ user.username }}</h4>
+                        <i style="color: #3AD1BC;" class="fa-solid fa-circle-check"></i>
+                    {% else %}
+                    <h1>helo</h1>
+                        {% if user.is_lecturer %}
+                            <!-- Display lecturer's profile picture -->
+                            {% if lecturer.profile_picture %}
+                                <img src="{{ lecturer.profile_picture.url }}" alt="Profile Picture">
+                            {% else %}
+                                <p>No profile picture available.</p>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+            
+
             <div style="position: relative; display: inline-block;">
                 <i style="margin-left: 25px; font-size: 20px;" class="fa-solid fa-bell"></i>
                 <div style="position: absolute; top: -7px; right: -7px; width: 15px; height: 15px; background-color: red; border-radius: 50%; text-align: center; color: white; font-size: 10px; font-weight: bold;">1</div>

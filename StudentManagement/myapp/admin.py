@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 @admin.register(Lecturer)
 class LecturerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name' ,'USERNAME', 'email', 'phone_number', 'course', 'profile_picture', 'password')
+    list_display = ('id', 'first_name', 'last_name', 'username', 'email', 'phone_number', 'course', 'profile_picture', 'password')
     autocomplete_fields = ['course']  # Use autocomplete for the course field
 
     def save_model(self, request, obj, form, change):
@@ -13,16 +13,17 @@ class LecturerAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         
         # Check if a corresponding user already exists
-        user = User.objects.filter(username=obj.USERNAME).first()
+        user = User.objects.filter(username=obj.username).first()
         
         # If no user exists, create a new one
         if not user:
-            user = User.objects.create_user(username=obj.USERNAME, email=obj.email)
+            user = User.objects.create_user(username=obj.username, email=obj.email, password=obj.password)
         
         # Set other user attributes
         user.first_name = obj.first_name
         user.last_name = obj.last_name
         user.save()
+
 
 class StudentAdminForm(forms.ModelForm):
     GENDER_CHOICES = [
@@ -36,7 +37,7 @@ class StudentAdminForm(forms.ModelForm):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('student_id', 'first_name', 'last_name','USERNAME', 'email', 'phone_number', 'date_of_birth', 'gender', 'address', 'parent_guardian_name', 'parent_guardian_phone_number', 'course', 'profile_picture', 'password')
+    list_display = ('student_id', 'first_name', 'last_name','username', 'email', 'phone_number', 'date_of_birth', 'gender', 'address', 'parent_guardian_name', 'parent_guardian_phone_number', 'course', 'profile_picture', 'password')
     autocomplete_fields = ['course']  # Use autocomplete for the course field
     form = StudentAdminForm
 
@@ -45,11 +46,11 @@ class StudentAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         
         # Check if a corresponding user already exists
-        user = User.objects.filter(username=obj.USERNAME).first()
+        user = User.objects.filter(username=obj.username).first()
         
         # If no user exists, create a new one
         if not user:
-            user = User.objects.create_user(username=obj.USERNAME, email=obj.USERNAME)
+            user = User.objects.create_user(username=obj.username, email=obj.username)
         
         # Set other user attributes
         user.first_name = obj.first_name

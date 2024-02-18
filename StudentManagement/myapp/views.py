@@ -43,6 +43,11 @@ def user_login(request):
 
     return render(request, 'index.html', {'error_message': error_message})
 
+def user_dashboard(request):
+    # Get the lecturer associated with the logged-in user
+    lecturer = Lecturer.objects.get(user=request.user)
+    return render(request, 'index.html', {'lecturer': lecturer})
+
 def teacher_class_students(request):
     if request.method == 'POST':
         form = ClassSelectionForm(request.POST)

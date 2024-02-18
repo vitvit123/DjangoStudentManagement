@@ -19,16 +19,23 @@ class Lecturer(models.Model):
     id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    USERNAME = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)  # Added username field
     email = models.EmailField()
     phone_number = models.CharField(max_length=20, blank=True)
     course = models.ForeignKey(Subject, on_delete=models.CASCADE)  # Changed to ForeignKey
     profile_picture = models.ImageField(upload_to='img/lecture_profiles/', null=True, blank=True)
     password = models.CharField(max_length=128)
+    
     def save(self, *args, **kwargs):
-        # Hash the password before saving
-        self.password = make_password(self.password)
+        # Check if lecturer is being created for the first time
+        if not self.pk:
+            # Create a new user with the provided username and password
+            user = User.objects.create_user(username=self.username, email=self.email, password=self.password)
+            # Hash the password before saving
+            self.password = make_password(self.password)
+        
         super().save(*args, **kwargs)
+    
     def __str__(self):
         return f"{self.id} {self.first_name} {self.last_name} {self.email} {self.phone_number} {self.course.SubjectName} {self.profile_picture} {self.password}"
 
@@ -36,7 +43,7 @@ class Student(models.Model):
     student_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    USERNAME = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
     email = models.EmailField()
     phone_number = models.CharField(max_length=20, blank=True)
     date_of_birth = models.DateField()
@@ -48,8 +55,12 @@ class Student(models.Model):
     profile_picture = models.ImageField(upload_to='img/Student_profiles/', null=True, blank=True)
     password = models.CharField(max_length=128)
     def save(self, *args, **kwargs):
-        # Hash the password before saving
-        self.password = make_password(self.password)
+        if not self.pk:
+            # Create a new user with the provided username and password
+            user = User.objects.create_user(username=self.username, email=self.email, password=self.password)
+            # Hash the password before saving
+            self.password = make_password(self.password)
+        
         super().save(*args, **kwargs)
 
     def __str__(self):
